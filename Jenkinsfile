@@ -30,18 +30,6 @@ pipeline {
             echo "building: topo version ${params.topoVersion}"
           }
         }
-        stage("Continue") {
-          steps {
-            script {
-              if (userInput == true) {
-                echo "this was successful"
-              } else {
-                echo "this was not successful"
-                currentBuild.result = 'FAILURE'
-              }
-            }
-          }
-        }
         stage("Approve Deployment") {
           steps {
             timeout(time: 1, unit: 'DAYS') {
