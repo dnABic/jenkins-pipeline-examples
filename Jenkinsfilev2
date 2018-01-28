@@ -1,0 +1,11 @@
+pipeline {
+    agent any
+
+    stages {
+      stage ('Starting build job') {
+        steps {
+          build job: 'test001'
+        }
+      }
+    }
+}
