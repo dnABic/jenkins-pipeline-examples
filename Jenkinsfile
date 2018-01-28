@@ -17,9 +17,9 @@ pipeline {
             echo "building: topo version ${params.topoVersion}"
           }
         }
-        stage ('Starting ART job') {
+        stage ('Starting build job') {
           steps {
-            build job: 'RunArtInTest', parameters: [[$class: 'StringParameterValue', name: 'systemname', value: systemname]]
+            build job: 'test001'
           }
         }
         stage("Approve Deployment") {
