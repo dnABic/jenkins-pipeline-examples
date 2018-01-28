@@ -9,6 +9,7 @@ pipeline {
         stage("deployment") {
             steps {
                 echo "flag: ${params.env}"
+                sh("./deployment.py ${params.env}")
             }
         }
     }
