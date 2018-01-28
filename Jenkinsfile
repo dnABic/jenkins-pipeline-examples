@@ -32,13 +32,15 @@ pipeline {
         }
         stage("Continue") {
           steps {
-            if (userInput == true) {
-              echo "this was successful"
-            } else {
-              echo "this was not successful"
-              currentBuild.result = 'FAILURE'
-            } 
-          } 
+            script {
+              if (userInput == true) {
+                echo "this was successful"
+              } else {
+                echo "this was not successful"
+                currentBuild.result = 'FAILURE'
+              }
+            }
+          }
         }
         stage("Deploy to production") {
           when {
