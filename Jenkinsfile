@@ -31,12 +31,13 @@ pipeline {
           }
         }
         stage("Continue") {
-
-          if (userInput == true) {
-            echo "this was successful"
-          } else {
-            echo "this was not successful"
-            currentBuild.result = 'FAILURE'
+          steps {
+            if (userInput == true) {
+              echo "this was successful"
+            } else {
+              echo "this was not successful"
+              currentBuild.result = 'FAILURE'
+            } 
           } 
         }
         stage("Deploy to production") {
