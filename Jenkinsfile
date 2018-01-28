@@ -16,7 +16,7 @@ pipeline {
         stage("Deploy to production") {
           when {
             anyOf {
-              branch: 'master'
+              branch 'master'
             }
           }
           steps {
@@ -27,9 +27,7 @@ pipeline {
         }
         stage("Deploy to development") {
           when {
-            anyOf {
-              branch: 'development'
-            }
+            branch 'development'
           }
           steps {
             echo "flag: ${params.env}"
