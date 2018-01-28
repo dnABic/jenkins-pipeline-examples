@@ -43,8 +43,10 @@ pipeline {
           }
         }
         stage("Approve Deployment") {
-          timeout(time: 1, unit: 'DAYS') {
-            input message: 'Do you want to deploy?', submitter: 'ops'
+          steps {
+            timeout(time: 1, unit: 'DAYS') {
+              input message: 'Do you want to deploy?', submitter: 'ops'
+            }
           }
         }
         stage("Deploy to production") {
