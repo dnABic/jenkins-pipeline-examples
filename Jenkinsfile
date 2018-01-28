@@ -13,12 +13,29 @@ pipeline {
     }
 
     stages {
-        stage("deployment") {
-            steps {
-                echo "flag: ${params.env}"
-                sh("./deployment.py ${params.env} ${params.topoVersion}")
-                sh("./deployment.py ${params.env} ${params.jobMind}")
+        stage("Deploy to production") {
+          when {
+            anyOf {
+              branch: 'master'
             }
+          }
+          steps {
+            echo "flag: ${params.env}"
+            sh("./deployment.py ${params.env} ${params.topoVersion}")
+            sh("./deployment.py ${params.env} ${params.jobMind}")
+          }
+        }
+        stage("Deploy to development") {
+          when {
+            anyOf {
+              branch: 'development'
+            }
+          }
+          steps {
+            echo "flag: ${params.env}"
+            sh("./deployment.py ${params.env} ${params.topoVersion}")
+            sh("./deployment.py ${params.env} ${params.jobMind}")
+          }
         }
     }
 }
