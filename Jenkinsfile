@@ -13,6 +13,11 @@ pipeline {
     }
 
     stages {
+        stage("Build") {
+          steps {
+            echo "building: topo version ${params.topoVersion}"
+          }
+        }
         stage("Deploy to production") {
           when {
             anyOf {
