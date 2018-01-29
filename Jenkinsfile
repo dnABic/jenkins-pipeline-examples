@@ -11,6 +11,13 @@ pipeline {
           description: 'Enter jobmind version')
     }
     stages {
+        stage ('Reserve staging') {
+          steps {
+            echo "Reserving staging resources"
+            lock(resource: 'staging-server') {
+              echo "Reservation fulfilled"
+            }
+        }
         stage ('Build topoentity') {
           steps {
             echo "building: topoentity version ${params.topoVersion}"
