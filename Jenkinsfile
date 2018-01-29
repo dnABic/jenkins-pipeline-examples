@@ -20,7 +20,6 @@ pipeline {
         stage ('Build jobmind') {
           steps {
             echo "building: jobmind version ${params.jobmindVersion}"
-            //build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'jobmindVersion', value: ${params.jobmindVersion}], [$class: 'StringParameterValue', name: 'taskType', value: "build"]]
             build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'taskType', value: "build"], [$class: 'StringParameterValue', name: 'jobmindVersion', value: "${params.jobmindVersion}"]]
           }
         }
@@ -37,7 +36,10 @@ pipeline {
             branch 'master'
           }
           steps {
-            sh("./deployment.py staging ${params.jobmindVersion}")
+            echo "deploying: jobmind version ${params.jobmindVersion} to staging"
+            build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'taskType', value: "deploy"],
+                                               [$class: 'StringParameterValue', name: 'jobmindVersion', value: "${params.jobmindVersion}"],
+                                               [$class: 'StringParameterValue', name: 'environment', value: "staging"]]
           }
         }
         stage("Testing") {
