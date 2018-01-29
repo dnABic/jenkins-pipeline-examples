@@ -14,13 +14,13 @@ pipeline {
         stage ('Build topoentity') {
           steps {
             echo "building: topoentity version ${params.topoVersion}"
-            build job: 'topoentityBuild', parameters: [[$class: 'StringParameterValue', name: 'version', value: ${params.topoVersion}]]
+            //build job: 'topoentityBuild', parameters: [[$class: 'StringParameterValue', name: 'version', value: ${params.topoVersion}]]
           }
         }
         stage ('Build jobmind') {
           steps {
             echo "building: jobmind version ${params.jobmindVersion}"
-            build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'jobmindVersion', value: ${params.jobmindVersion}], [$class: 'StringParameterValue', name: 'taskType', value: "build"]]
+            //build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'jobmindVersion', value: ${params.jobmindVersion}], [$class: 'StringParameterValue', name: 'taskType', value: "build"]]
           }
         }
         stage("Deploy topoentity to staging") {
