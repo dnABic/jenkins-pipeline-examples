@@ -2,24 +2,49 @@ pipeline {
     agent any
 
     parameters {
-        choice(choices: 'development\nstaging\nproduction', description: 'Environment parameter', name: 'env')
-        booleanParam(name: 'buildAndDeploy',
+        booleanParam(name: 'buildAutoNames',
           defaultValue: false,
-          description: 'Make new builds and deploy them')
+          description: 'Get new tags for applications automatically')
         string(name: 'topoVersion',
-          description: 'Required topoentity version')
+          description: 'Enter topoentity version')
         string(name: 'jobMind',
-          description: 'Required jobmind version')
+          description: 'Enter jobmind version')
     }
     stages {
-        stage("Build") {
+        stage ('Build topoentity') {
           steps {
-            echo "building: topo version ${params.topoVersion}"
+            echo "building: topoentity version ${params.topoVersion}"
+            build job: 'topoentityBuild'
           }
         }
-        stage ('Starting build job') {
+        stage ('Build jobmind') {
           steps {
-            build job: 'test001'
+            echo "building: jobmind version ${params.jobMind}"
+            build job: 'jobmindBuild'
+          }
+        }
+        stage("Deploy topoentity to staging") {
+          when {
+            branch 'master'
+          }
+          steps {
+            sh("./deployment.py staging ${params.topoVersion}")
+          }
+        }
+        stage("Deploy jobmind to staging") {
+          when {
+            branch 'master'
+          }
+          steps {
+            sh("./deployment.py staging ${params.jobMind}")
+          }
+        }
+        stage("Testing") {
+          when {
+            branch 'master'
+          }
+          steps {
+            echo "Run some tests"
           }
         }
         stage("Approve Deployment") {
@@ -29,26 +54,20 @@ pipeline {
             }
           }
         }
-        stage("Deploy to production") {
+        stage("Deploy topoentity to production") {
           when {
             branch 'master'
           }
           steps {
-            echo "flag: ${params.env}"
-            sh("./deployment.py ${params.env} ${params.topoVersion}")
-            sh("./deployment.py ${params.env} ${params.jobMind}")
+            sh("./deployment.py prod ${params.topoVersion}")
           }
         }
-        stage("Deploy to development") {
+        stage("Deploy jobmind to development") {
           when {
-            anyOf {
-              branch 'development'
-            }
+            branch 'master'
           }
           steps {
-            echo "flag: ${params.env}"
-            sh("./deployment.py ${params.env} ${params.topoVersion}")
-            sh("./deployment.py ${params.env} ${params.jobMind}")
+            sh("./deployment.py prod ${params.jobMind}")
           }
         }
     }
