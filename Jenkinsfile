@@ -20,7 +20,6 @@ pipeline {
         stage ('Build jobmind') {
           steps {
             echo "building: jobmind version ${params.jobmindVersion}"
-            build job: 'jobmind'
             build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'jobmindVersion', value: ${params.jobmindVersion}], [$class: 'StringParameterValue', name: 'taskType', value: "build"]]
           }
         }
