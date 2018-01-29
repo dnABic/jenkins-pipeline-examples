@@ -7,20 +7,21 @@ pipeline {
           description: 'Get new tags for applications automatically')
         string(name: 'topoVersion',
           description: 'Enter topoentity version')
-        string(name: 'jobMind',
+        string(name: 'jobmindVersion',
           description: 'Enter jobmind version')
     }
     stages {
         stage ('Build topoentity') {
           steps {
             echo "building: topoentity version ${params.topoVersion}"
-            build job: 'topoentityBuild'
+            build job: 'topoentityBuild', parameters: [[$class: 'StringParameterValue', name: 'version', value: ${params.topoVersion}]]
           }
         }
         stage ('Build jobmind') {
           steps {
-            echo "building: jobmind version ${params.jobMind}"
+            echo "building: jobmind version ${params.jobmindVersion}"
             build job: 'jobmindBuild'
+            build job: 'jobmindBuild', parameters: [[$class: 'StringParameterValue', name: 'version', value: ${params.jobmindVersion}]]
           }
         }
         stage("Deploy topoentity to staging") {
@@ -36,7 +37,7 @@ pipeline {
             branch 'master'
           }
           steps {
-            sh("./deployment.py staging ${params.jobMind}")
+            sh("./deployment.py staging ${params.jobmindVersion}")
           }
         }
         stage("Testing") {
@@ -67,7 +68,7 @@ pipeline {
             branch 'master'
           }
           steps {
-            sh("./deployment.py prod ${params.jobMind}")
+            sh("./deployment.py prod ${params.jobmindVersion}")
           }
         }
     }
