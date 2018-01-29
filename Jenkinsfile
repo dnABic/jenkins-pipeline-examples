@@ -70,7 +70,10 @@ pipeline {
             branch 'master'
           }
           steps {
-            sh("./deployment.py prod ${params.jobmindVersion}")
+            echo "deploying: jobmind version ${params.jobmindVersion} to production"
+            build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'taskType', value: "deploy"],
+                                               [$class: 'StringParameterValue', name: 'jobmindVersion', value: "${params.jobmindVersion}"],
+                                               [$class: 'StringParameterValue', name: 'environment', value: "prod"]]
           }
         }
     }
