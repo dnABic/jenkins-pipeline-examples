@@ -17,6 +17,7 @@ pipeline {
             lock(resource: 'staging-server') {
               echo "Reservation fulfilled"
             }
+          }
         }
         stage ('Build topoentity') {
           steps {
