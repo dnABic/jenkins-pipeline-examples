@@ -1,8 +1,10 @@
 pipeline {
     agent any
 
-    parameters {
+    options {
         lock resource: 'staging-server'
+    }
+    parameters {
         booleanParam(name: 'buildAutoNames',
           defaultValue: false,
           description: 'Get new tags for applications automatically')
