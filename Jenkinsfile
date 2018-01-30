@@ -17,13 +17,15 @@ pipeline {
         stage ('Build topoentity') {
           steps {
             echo "building: topoentity version ${params.topoVersion}"
-            //build job: 'topoentityBuild', parameters: [[$class: 'StringParameterValue', name: 'version', value: ${params.topoVersion}]]
+            build job: 'topoentity', parameters: [[$class: 'BooleanParameterValue', name: 'actionBuild', value: true],
+                                                  [$class: 'StringParameterValue', name: 'topoentityVersion', value: "${params.topoVersion}"]]
           }
         }
         stage ('Build jobmind') {
           steps {
             echo "building: jobmind version ${params.jobmindVersion}"
-            build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'taskType', value: "build"], [$class: 'StringParameterValue', name: 'jobmindVersion', value: "${params.jobmindVersion}"]]
+            build job: 'jobmind', parameters: [[$class: 'BooleanParameterValue', name: 'actionBuild', value: true],
+                                               [$class: 'StringParameterValue', name: 'jobmindVersion', value: "${params.jobmindVersion}"]]
           }
         }
         stage("Deploy topoentity to staging") {
@@ -31,7 +33,10 @@ pipeline {
             branch 'master'
           }
           steps {
-            sh("./deployment.py staging ${params.topoVersion}")
+            echo "deploying: topoentity version ${params.topoVersion} to staging"
+            build job: 'topoentity', parameters: [[$class: 'BooleanParameterValue', name: 'actionDeploy', value: true],
+                                                  [$class: 'StringParameterValue', name: 'topoentityVersion', value: "${params.topoVersion}"],
+                                                  [$class: 'StringParameterValue', name: 'environment', value: "staging"]]
           }
         }
         stage("Deploy jobmind to staging") {
@@ -65,7 +70,10 @@ pipeline {
             branch 'master'
           }
           steps {
-            sh("./deployment.py prod ${params.topoVersion}")
+            echo "deploying: topoentity version ${params.topoVersion} to production"
+            build job: 'topoentity', parameters: [[$class: 'BooleanParameterValue', name: 'actionDeploy', value: true],
+                                                  [$class: 'StringParameterValue', name: 'topoentityVersion', value: "${params.topoVersion}"],
+                                                  [$class: 'StringParameterValue', name: 'environment', value: "prod"]]
           }
         }
         stage("Deploy jobmind to development") {
