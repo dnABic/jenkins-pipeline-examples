@@ -35,6 +35,7 @@ pipeline {
           steps {
             echo "deploying: topoentity version ${params.topoVersion} to staging"
             build job: 'topoentity', parameters: [[$class: 'BooleanParameterValue', name: 'actionDeploy', value: true],
+                                                  [$class: 'BooleanParameterValue', name: 'actionBuild', value: false],
                                                   [$class: 'StringParameterValue', name: 'topoentityVersion', value: "${params.topoVersion}"],
                                                   [$class: 'StringParameterValue', name: 'environment', value: "staging"]]
           }
@@ -46,6 +47,7 @@ pipeline {
           steps {
             echo "deploying: jobmind version ${params.jobmindVersion} to staging"
             build job: 'jobmind', parameters: [[$class: 'StringParameterValue', name: 'taskType', value: "deploy"],
+                                               [$class: 'BooleanParameterValue', name: 'actionBuild', value: false],
                                                [$class: 'StringParameterValue', name: 'jobmindVersion', value: "${params.jobmindVersion}"],
                                                [$class: 'StringParameterValue', name: 'environment', value: "staging"]]
           }
